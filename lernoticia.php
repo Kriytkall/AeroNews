@@ -20,26 +20,37 @@
     </nav>
     <section class="centro">
     <?php
-        if (isset($_GET['titulo']) && isset($_GET['subtitulo']) && isset($_GET['imagem']) && isset($_GET['texto'])) {
-            $titulo = urldecode($_GET['titulo']);
-            $subtitulo = urldecode($_GET['subtitulo']);
-            $imagem = urldecode($_GET['imagem']);
-            $texto = urldecode($_GET['texto']);
+        require_once("salvar_noticia.php");
 
-            echo "<div class='secao-noticia'>";
-                echo "<p>$titulo</p>";
-                echo "<div style='height: 2px; width: 200px; background-color: black; margin: 20px;'></div>";
-                echo "<p>$subtitulo</p>";
-            echo "</div>";
-            echo "<img src='$imagem'>";
-            echo "<article>";
-                echo "<p>$texto</p>";
-            echo "</article>";
+        if (isset($_GET['id_noticia'])) {
+            $id_noticia = urldecode($_GET['id_noticia']);
+            
+            $resultados = lerNoticias($id_noticia);
+            
+            if ($resultados !== null) {
+                foreach ($resultados as $noticia) {
+                    $titulo = $noticia['nm_titulo'];
+                    $subtitulo = $noticia['nm_subtitulo'];
+                    $imagem = $noticia['img_noticia'];
+                    $texto = $noticia['tx_noticia'];
+                }
+                
+                echo "<div class='secao-noticia'>";
+                    echo "<p>$titulo</p>";
+                    echo "<div style='height: 2px; width: 200px; background-color: black; margin: 20px;'></div>";
+                    echo "<p>$subtitulo</p>";
+                    echo "<img src='$imagem'>";
+                echo "</div>";
+                echo "<article>";
+                    echo "<p>$texto</p>";
+                echo "</article>";
+            } else {
+                echo "Erro ao buscar notícias.";
+            }
         } else {
             echo "Parâmetros ausentes na URL.";
         }
     ?>
-
     </section>
 </body>
 </html>

@@ -1,5 +1,5 @@
 <?php
-$bd_host = "200.19.1.18";
+$bd_host = "192.168.20.18";
 $sgbd = "pgsql";
 $base_de_dados = "luisbatista";
 $bd_usuario = "luisbatista";
@@ -65,4 +65,20 @@ function exibirTodasNoticias() {
     }
 }
 
+function lerNoticias($id_noticia) {
+    try {
+        $conn = conectarBD();
+        if ($conn) {
+            $stmt = $conn->prepare("SELECT * FROM tb_noticia WHERE id_noticia = :id_noticia");
+            $stmt->bindParam(':id_noticia', $id_noticia, PDO::PARAM_INT);
+            $stmt->execute();
+            $resultados = $stmt->fetchAll(PDO::FETCH_ASSOC);
+            return $resultados;
+        } else {
+            return null;
+        }
+    } catch (PDOException $e) {
+        return "Erro ao buscar notícias: " . $e->getMessage();
+    }
+}
 ?>
