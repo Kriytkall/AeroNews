@@ -44,7 +44,7 @@ const firebaseConfig = {
         formData.append('noticia', noticia);
   
   
-        return fetch('salvar_noticia.php', {
+        return fetch('conectarBanco.php', {
           method: 'POST',
           body: formData
         });
@@ -55,9 +55,6 @@ const firebaseConfig = {
         } else {
           throw new Error('Erro ao salvar notícia.');
         }
-      })
-      .then((message) => {
-        document.querySelector("#resultado").innerHTML = message;
       })
       .catch((error) => {
         console.error("Erro:", error);

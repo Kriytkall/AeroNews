@@ -302,3 +302,82 @@ article p{
     margin: 10px 0px 10px 0px;
     line-height: 1.5;
 }
+
+
+/* TELA DE CRIAÇÃO */
+
+.centralizar-form{
+    width: 99vw;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.contain-form{
+    margin: 100px;
+    border-radius: 10px;
+    width: 800px;
+    height: 1000px;
+    box-shadow: 0 0 12px 1px rgba(0, 0, 0, 0.1);
+    
+}
+
+.cabecalho{
+    width: 100%;
+    height: 85px;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+.contain-form2{
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;   
+}
+
+.contain-form3{
+    width: 90%;
+}
+
+.campo{
+    display: flex;
+    flex-direction: column;
+    margin: 20px 0px 20px 0px;
+}
+
+.campo label{
+    font-family: 'Oswald';
+    font-size: 24px;
+    margin-bottom: 5px;
+}
+
+.campo input{
+    height: 30px;
+    border: 1px solid rgba(0, 0, 0, 0.1);
+    font-size: 16px;
+    padding: 20px 9px;
+}
+
+.campo input[type="file"] {
+    height: auto;
+    border: none;
+    padding: 5px;
+}
+
+textarea {
+    resize: none;
+    border: 1px solid rgba(0, 0, 0, 0.1);
+    padding: 20px;
+    font-size: 18px;
+}
+
+.botao-enviar{
+    width: 130px;
+    height: 50px;
+    border: none;
+    font-family: 'Oswald';
+    font-size: 24px;
+    border-radius: 5px;
+    margin-top: 20px;
+}
