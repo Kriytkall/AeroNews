@@ -20,7 +20,6 @@
     </nav>
     <div class="contain">
         <div id="lista">
-        <h1>Todas as notícias</h1>
         <?php
             require_once("../php/conectarBanco.php");
             $resultados = exibirTodasNoticias();

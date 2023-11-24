@@ -1,5 +1,5 @@
 <?php
-$bd_host = "192.168.20.18";
+$bd_host = "200.19.1.18";
 $sgbd = "pgsql";
 $base_de_dados = "luisbatista";
 $bd_usuario = "luisbatista";
@@ -81,4 +81,59 @@ function lerNoticias($id_noticia) {
         return "Erro ao buscar notícias: " . $e->getMessage();
     }
 }
+
+function deletarNoticia($id_noticia) {
+    try {
+        $conn = conectarBD();
+        if ($conn) {
+            $stmt = $conn->prepare("DELETE FROM tb_noticia WHERE id_noticia = :id_noticia");
+            $stmt->bindParam(':id_noticia', $id_noticia, PDO::PARAM_INT);
+            $stmt->execute();
+            $resultados = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        } else {
+            return null;
+        }
+    } catch (PDOException $e) {
+        return "Erro ao deletar: " . $e->getMessage();
+    }
+}
+
+function updateNoticia() {
+    // Obtém os dados da notícia a ser atualizada
+    $id_noticia = $_POST['id_noticia'];
+    $titulo = $_POST['titulo'];
+    $subtitulo = $_POST['subtitulo'];
+    $imgUrl = $_POST['imagem'];
+    $noticia = $_POST['noticia'];
+
+    $conn = conectarBD();
+
+    // Prepara a consulta de atualização
+    $sql = "UPDATE tb_noticia SET
+            nm_titulo = :titulo,
+            nm_subtitulo = :subtitulo,
+            img_noticia = :imgUrl,
+            tx_noticia = :noticia
+            WHERE id_noticia = :id_noticia";
+    $stmt = $conn->prepare($sql);
+
+    // Vincula os parâmetros da consulta
+    $stmt->bindParam(':titulo', $titulo);
+    $stmt->bindParam(':subtitulo', $subtitulo);
+    $stmt->bindParam(':imgUrl', $imgUrl);
+    $stmt->bindParam(':noticia', $noticia);
+    $stmt->bindParam(':id_noticia', $id_noticia, PDO::PARAM_INT);
+
+    // Executa a consulta
+    $stmt->execute();
+
+    // Verifica se a consulta foi bem-sucedida
+    if ($stmt->rowCount() > 0) {
+        return "Notícia atualizada com sucesso!";
+    } else {
+        return "Erro ao atualizar notícia.";
+    }
+}
+
+
 ?>

@@ -11,7 +11,7 @@
     <nav>
         <p>AERO NEWS</p>
         <ul>  
-            <li><a href="../pages/index.html">HOME</a></li>
+            <li><a href="../pages/home.html">HOME</a></li>
             <li><a href="listarNoticia.php">NOTÍCIAS</a></li>
             <li><a href="">CATEGORIAS</a></li>
             <li><a href="criarNoticia.php">POSTAGEM</a></li>         
