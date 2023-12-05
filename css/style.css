@@ -338,6 +338,8 @@ article p{
 
 .contain-form3{
     width: 90%;
+    display: flex;
+    flex-direction: column;
 }
 
 .campo{
@@ -380,4 +382,16 @@ textarea {
     font-size: 24px;
     border-radius: 5px;
     margin-top: 20px;
+}
+
+.checkbox1{
+    display:block;
+    font-family: 'Bebas Neue';
+    font-size: 24px;
+}
+
+.checkbox1 input{
+    width: 15px;
+    height: 15px;
+    border-width: 2px;
 }

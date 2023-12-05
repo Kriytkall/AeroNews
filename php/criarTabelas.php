@@ -11,57 +11,53 @@ try {
 
     // Query para criar a tabela de usuário
     $query_create_table = "
-        create table tb_usuario(
-            id_usuario serial,
-            nm_usuario varchar not null,
-            usr_email varchar not null,
-            usr_senha varchar not null,
-            isAdmin BOOLEAN NOT NULL DEFAULT false
-        )
-     ";
-    $stmt_create_table = $conn->prepare($query_create_table);
-    $stmt_create_table->execute();
-
-    // Query para adicionar chave primaria
-    $query_pk_usuario = "
-        alter table tb_usuario
-        add constraint pk_usuario
-        primary key(id_usuario)";
-    $stmt_pk_usuario = $conn->prepare($query_pk_usuario);
-    $stmt_pk_usuario->execute();
-
-    // Query para criar a tabela de notícia
-    $query_create_table = "
-        create table tb_noticia(
-            id_noticia serial,
-            nm_titulo varchar not null,
-            nm_subtitulo varchar not null,
-            img_noticia text,
-            tx_noticia text not null,
-            id_usuario int not null
+        CREATE TABLE tb_usuario(
+            id_usuario SERIAL,
+            nm_usuario VARCHAR NOT NULL,
+            usr_email VARCHAR NOT NULL,
+            usr_senha VARCHAR NOT NULL,
+            isAdmin BOOLEAN NOT NULL DEFAULT false,
+            PRIMARY KEY (id_usuario)
         )";
     $stmt_create_table = $conn->prepare($query_create_table);
     $stmt_create_table->execute();
 
-    // Query para adicionar chave primaria
-    $query_pk_noticia = "
-        alter table tb_noticia
-        add constraint pk_noticia
-        primary key(id_noticia)";
-    $query_pk_noticia = $conn->prepare($query_pk_noticia);
-    $query_pk_noticia->execute();
+    // Query para criar a tabela de notícia
+    $query_create_table = "
+        CREATE TABLE tb_noticia(
+            id_noticia SERIAL,
+            nm_titulo VARCHAR NOT NULL,
+            nm_subtitulo VARCHAR NOT NULL,
+            img_noticia TEXT,
+            tx_noticia TEXT NOT NULL,
+            PRIMARY KEY (id_noticia)
+        )";
+    $stmt_create_table = $conn->prepare($query_create_table);
+    $stmt_create_table->execute();
 
-    // Query para adicionar a chave estrangeira
-    $query_fk_noticia = "
-        ALTER TABLE tb_noticia
-        ADD CONSTRAINT fk_usuario
-        FOREIGN KEY (id_usuario) REFERENCES tb_usuario(id_usuario)";
-    $stmt_fk_noticia = $conn->prepare($query_fk_noticia);
-    $stmt_fk_noticia->execute();
+    // Query para criar a tabela de categoria
+    $query_create_table = "
+        CREATE TABLE tb_categoria(
+            id_categoria SERIAL NOT NULL,
+            nm_categoria VARCHAR UNIQUE,
+            PRIMARY KEY (id_categoria)
+        )";
+    $stmt_create_table = $conn->prepare($query_create_table);
+    $stmt_create_table->execute();
 
+    // Query para criar a tabela de noticia_categoria
+    $query_create_table = "
+        CREATE TABLE tb_noticia_categoria(
+            id_categoria INT NOT NULL,
+            id_noticia INT NOT NULL,
+            PRIMARY KEY (id_categoria, id_noticia),
+            FOREIGN KEY (id_categoria) REFERENCES tb_categoria(id_categoria),
+            FOREIGN KEY (id_noticia) REFERENCES tb_noticia(id_noticia)
+        )";
+    $stmt_create_table = $conn->prepare($query_create_table);
+    $stmt_create_table->execute();
 
-    echo 'Tabelas criadas e dados inseridos com sucesso!';
-
+    echo 'Tabelas criadas com sucesso!';
 } catch (PDOException $e) {
     echo 'Erro de Conexão: ' . $e->getMessage();
 }

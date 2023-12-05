@@ -29,34 +29,52 @@ const firebaseConfig = {
   
   function enviarFormulario(event) {
     event.preventDefault();
-  
+
     enviarImagem()
-      .then((imgUrl) => {
-        const titulo = document.getElementById('titulo').value;
-        const subtitulo = document.getElementById('subtitulo').value;
-        const noticia = document.getElementById('noticia').value;
-  
-        // Envia os dados (incluindo a URL da imagem) para o servidor PHP
-        const formData = new FormData();
-        formData.append('titulo', titulo);
-        formData.append('subtitulo', subtitulo);
-        formData.append('imagem', imgUrl);
-        formData.append('noticia', noticia);
-  
-  
-        return fetch('conectarBanco.php', {
-          method: 'POST',
-          body: formData
+        .then((imgUrl) => {
+            const titulo = document.getElementById('titulo').value;
+            const subtitulo = document.getElementById('subtitulo').value;
+            const noticia = document.getElementById('noticia').value;
+
+            // Obter categorias selecionadas
+            const categoriasSelecionadas = Array.from(document.querySelectorAll('input[name="categorias[]"]:checked')).map(input => input.value);
+
+            // Envia os dados (incluindo a URL da imagem e as categorias) para o servidor PHP
+            const formData = new FormData();
+            formData.append('titulo', titulo);
+            formData.append('subtitulo', subtitulo);
+            formData.append('imagem', imgUrl);
+            formData.append('noticia', noticia);
+
+            // Adiciona as categorias ao FormData
+            categoriasSelecionadas.forEach(categoria => {
+                formData.append('categorias[]', categoria);
+            });
+
+            // Debugging (opcional)
+            console.log('Título:', titulo);
+            console.log('Subtítulo:', subtitulo);
+            console.log('Imagem URL:', imgUrl);
+            console.log('Notícia:', noticia);
+            console.log('Categorias:', categoriasSelecionadas);
+
+            return fetch('conectarBanco.php', {
+                method: 'POST',
+                body: formData
+            });
+        })
+        .then((response) => {
+            if (response.ok) {
+                return response.text();
+            } else {
+                throw new Error('Erro ao salvar notícia.');
+            }
+        })
+        .then((resultado) => {
+            console.log(resultado);
+            // Adicione aqui qualquer lógica adicional após o sucesso
+        })
+        .catch((error) => {
+            console.error("Erro:", error);
         });
-      })
-      .then((response) => {
-        if (response.ok) {
-          return response.text();
-        } else {
-          throw new Error('Erro ao salvar notícia.');
-        }
-      })
-      .catch((error) => {
-        console.error("Erro:", error);
-      });
-  }
+}

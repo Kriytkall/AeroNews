@@ -19,33 +19,57 @@ function conectarBD() {
 }
 
 // Função para cadastrar uma notícia
-function cadastrarNoticia($titulo, $subtitulo, $imgUrl, $noticia) {
+function cadastrarNoticia($titulo, $subtitulo, $imgUrl, $noticia, $categorias) {
     $conn = conectarBD();
-    if ($conn) {
-        try {
-            $stmt = $conn->prepare("INSERT INTO tb_noticia (nm_titulo, nm_subtitulo, img_noticia, tx_noticia) VALUES (:titulo, :subtitulo, :imgUrl, :noticia)");
-            $stmt->bindParam(':titulo', $titulo);
-            $stmt->bindParam(':subtitulo', $subtitulo);
-            $stmt->bindParam(':imgUrl', $imgUrl);
-            $stmt->bindParam(':noticia', $noticia);
-            $stmt->execute();
-            return "Notícia cadastrada com sucesso!";
-        } catch (PDOException $e) {
-            return "Erro ao cadastrar notícia: " . $e->getMessage();
-        }
+    if (!$conn) {
+        return "Erro ao conectar ao banco de dados.";
     }
-    return "Erro ao conectar ao banco de dados.";
+
+    try {
+        $stmt = $conn->prepare("INSERT INTO tb_noticia (nm_titulo, nm_subtitulo, img_noticia, tx_noticia) VALUES (:titulo, :subtitulo, :imgUrl, :noticia)");
+        $stmt->bindParam(':titulo', $titulo);
+        $stmt->bindParam(':subtitulo', $subtitulo);
+        $stmt->bindParam(':imgUrl', $imgUrl);
+        $stmt->bindParam(':noticia', $noticia);
+        $stmt->execute();
+
+        $id_noticia = $conn->lastInsertId();
+
+        // Associar notícia às categorias selecionadas
+        foreach ($categorias as $id_categoria) {
+            $stmt = $conn->prepare("INSERT INTO tb_noticia_categoria (id_noticia, id_categoria) VALUES (:id_noticia, :id_categoria)");
+            $stmt->bindParam(':id_noticia', $id_noticia);
+            $stmt->bindParam(':id_categoria', $id_categoria);
+            $stmt->execute();
+        }
+
+        return "Notícia cadastrada com sucesso!";
+    } catch (PDOException $e) {
+        return "Erro ao cadastrar notícia: " . $e->getMessage();
+    } catch (Exception $e) {
+        return "Erro geral ao cadastrar notícia: " . $e->getMessage();
+    }
 }
 
 if ($_SERVER["REQUEST_METHOD"] === "POST") {
-    $titulo = $_POST["titulo"];
-    $subtitulo = $_POST["subtitulo"];
-    $imgUrl = $_POST["imagem"];
-    $noticia = $_POST["noticia"];
+    $titulo = isset($_POST["titulo"]) ? $_POST["titulo"] : '';
+    $subtitulo = isset($_POST["subtitulo"]) ? $_POST["subtitulo"] : '';
+    $imgUrl = isset($_POST["imagem"]) ? $_POST["imagem"] : '';
+    $noticia = isset($_POST["noticia"]) ? $_POST["noticia"] : '';
 
-    $resultado = cadastrarNoticia($titulo, $subtitulo, $imgUrl, $noticia);
-    echo $resultado;
+    // Ajuste para a nova estrutura dos checkboxes
+    $categorias = isset($_POST["categorias"]) ? $_POST["categorias"] : [];
+
+    if (empty($titulo) || empty($subtitulo) || empty($noticia) || empty($categorias)) {
+        echo "Por favor, preencha todos os campos e selecione pelo menos uma categoria.";
+    } else {
+        $resultado = cadastrarNoticia($titulo, $subtitulo, $imgUrl, $noticia, $categorias);
+        echo $resultado;
+    }
 }
+
+
+
 
 function exibirTodasNoticias() {
     try {
@@ -64,6 +88,33 @@ function exibirTodasNoticias() {
         return "Erro ao buscar notícias: " . $e->getMessage();
     }
 }
+
+// Função para exibir notícias com base em uma categoria específica
+function exibirNoticiasPorCategoria($categoria_id) {
+    $conn = conectarBD();
+    if (!$conn) {
+        return null;
+    }
+
+    try {
+        $stmt = $conn->prepare("
+            SELECT tb_noticia.*
+            FROM tb_noticia
+            INNER JOIN tb_noticia_categoria ON tb_noticia.id_noticia = tb_noticia_categoria.id_noticia
+            WHERE tb_noticia_categoria.id_categoria = :categoria_id
+        ");
+
+        $stmt->bindParam(':categoria_id', $categoria_id);
+        $stmt->execute();
+
+        $resultados = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+        return $resultados;
+    } catch (PDOException $e) {
+        return null;
+    }
+}
+
 
 function lerNoticias($id_noticia) {
     try {
@@ -134,6 +185,5 @@ function updateNoticia() {
         return "Erro ao atualizar notícia.";
     }
 }
-
 
 ?>

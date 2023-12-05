@@ -12,10 +12,10 @@
     <nav>
         <p>AERO NEWS</p>
         <ul>  
-            <li><a href="../pages/index.html">HOME</a></li>
+            <li><a href="home.php">HOME</a></li>
             <li><a href="listarNoticia.php">NOTÍCIAS</a></li>
-            <li><a href="">CATEGORIAS</a></li>
-            <li><a href="criarNoticia.php">POSTAGEM</a></li>          
+            <li><a href="criarNoticia.php">POSTAGEM</a></li>
+            <li><a href="../php/logout.php">Logout</a></li>         
         </ul>
     </nav>
     <section class="centro">

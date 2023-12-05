@@ -7,12 +7,75 @@
     <title>Login</title>
 </head>
 <body>
-    <section class="centro">
+
+
+    <section class="login">
+        <div class="box-login">
+            <div class="box-formulario">
+                <div class="box-formulario-content">
+                    <div>
+                        <a style="text-decoration: none; color: black; margin-right: 10%;" href="#" id="toggleLogin">LOGIN</a> 
+                        <a style="text-decoration: none; color: black" href="#" id="toggleCadastro">REGISTRO</a> 
+                    </div>
+                    <div>
+                        <p>LOGIN DE USUÁRIO</p>
+                        <p>WELL COME</p>
+                    </div>     
+                    <form class="box-formulario-content-input" action="../php/cadastro_login.php" id="formLogin" method="post">
+                        <input type="email" name="usr_email" placeholder="Email" style="padding-left: 10px;">
+                        <input type="password" name="usr_senha" placeholder="Senha" style="padding-left: 10px;">
+                        <input type="hidden" name="acao" value="login">
+                        <button style="margin-top: 10px;" class="box-formulario-content-button" type="submit">LOGIN</button>
+                    </form>
+
+                    <form class="box-formulario-content-input" action="../php/cadastro_login.php" method="post" id="formCadastro" style="display: none;">
+                        <input type="text" name="nm_usuario" placeholder="Nome de usuário" style="padding-left: 10px;" required>
+                        <input type="email" name="usr_email" placeholder="Email" style="padding-left: 10px;" required>
+                        <input type="password" name="usr_senha" placeholder="Senha" style="padding-left: 10px;" required>
+                        <input type="hidden" name="acao" value="cadastro">
+                    
+                        <button style="margin-top: 10px;" type="submit" class="box-formulario-content-button">CADASTRAR</button>
+                    </form>       
+                </div>
+            </div>
+            <div class="box-wallpaper"></div>
+        </div>
+    </section>
+    <script>
+        document.getElementById("toggleCadastro").addEventListener("click", function () {
+            document.getElementById("formCadastro").style.display = "block";
+            document.querySelector("form:not(#formCadastro)").style.display = "none";
+        });
+
+        document.getElementById("toggleLogin").addEventListener("click", function () {
+            document.getElementById("formLogin").style.display = "block";
+            document.querySelector("form:not(#formLogin)").style.display = "none";
+        });
+    </script>
+</body>
+</html>
+
+
+    <!-- <section class="centro">
         <form action="../php/cadastro_login.php" method="post">
             <input type="email" name="usr_email" placeholder="Email" style="padding-left: 10px;" required>
             <input type="password" name="usr_senha" placeholder="Senha" style="padding-left: 10px;" required>
+            <input type="hidden" name="acao" value="login">
+
             <button type="submit" class="box-formulario-content-button">LOGIN</button>
         </form>
-    </section>
-</body>
-</html>
+        <br>
+        <p>Ainda não tem uma conta? <a href="#" id="toggleCadastro">Cadastrar</a></p>
+        <br>
+        
+        <form action="../php/cadastro_login.php" method="post" id="formCadastro" style="display: none;">
+            <input type="text" name="nm_usuario" placeholder="Nome de usuário" style="padding-left: 10px;" required>
+            <input type="email" name="usr_email" placeholder="Email" style="padding-left: 10px;" required>
+            <input type="password" name="usr_senha" placeholder="Senha" style="padding-left: 10px;" required>
+            <input type="hidden" name="acao" value="cadastro">
+        
+            <button type="submit" class="box-formulario-content-button">CADASTRAR</button>
+        </form>        
+        
+    </section> -->
+  

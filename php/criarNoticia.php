@@ -11,10 +11,10 @@
     <nav>
         <p>AERO NEWS</p>
         <ul>  
-            <li><a href="../pages/home.html">HOME</a></li>
+            <li><a href="home.php">HOME</a></li>
             <li><a href="listarNoticia.php">NOTÍCIAS</a></li>
-            <li><a href="">CATEGORIAS</a></li>
-            <li><a href="criarNoticia.php">POSTAGEM</a></li>         
+            <li><a href="criarNoticia.php">POSTAGEM</a></li>
+            <li><a href="../php/logout.php">Logout</a></li>        
         </ul>
     </nav>
     <section class="centralizar-form">
@@ -27,21 +27,34 @@
                                 <label for="titulo">Título</label>
                                 <input type="text" id="titulo" name="titulo" required>
                             </div>
-                        
+
                             <div class="campo">
                                 <label for="subtitulo">Subtítulo</label>
                                 <input type="text" id="subtitulo" name="subtitulo" required>
                             </div>
-                        
+
                             <div class="campo">
                                 <label for="imagem">Imagem</label>
-                                <input type="file" id="imagem">
+                                <input type="file" id="imagem" name="imagem">
                             </div>
-                        
+
                             <div class="campo">
-                                <label for="texto">Texto</label>
+                                <label for="noticia">Texto</label>
                                 <textarea name="noticia" id="noticia" rows="10" cols="50"></textarea>
                             </div>
+
+
+                            <label class="checkbox1">
+                                <input type="checkbox" name="categorias[]" value="1"> AVIAÇÃO COMERCIAL
+                            </label>
+
+                            <label class="checkbox1">
+                                <input type="checkbox" name="categorias[]" value="2"> AVIAÇÃO MILITAR
+                            </label>
+
+                            <label class="checkbox1">
+                                <input type="checkbox" name="categorias[]" value="3"> TECNOLOGIA AERO
+                            </label>
                         
                             <input class="botao-enviar" type="submit" value="Enviar">
                         </form>
