@@ -15,7 +15,6 @@
             <?php
                 $isAdmin = true;
             ?>
-            <!-- Se o usuário for um administrador, exibir o botão de postagem -->
             <?php if ($isAdmin): ?>
                 <li><a href="../php/criarNoticia.php">POSTAGEM</a></li>
             <?php endif; ?>

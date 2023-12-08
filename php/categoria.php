@@ -22,14 +22,9 @@
         <div id="lista">
             <?php
             require_once("../php/conectarBanco.php");
-
-            // Verifica se o parâmetro "categoria" está presente na URL
             if (isset($_GET['categoria'])) {
                 $categoria_id = $_GET['categoria'];
-
-                // Obtém as notícias associadas a uma categoria específica
                 $resultados = exibirNoticiasPorCategoria($categoria_id);
-
                 if ($resultados !== null) {
                     foreach ($resultados as $noticia) {
                         echo '<div id="coluna">';

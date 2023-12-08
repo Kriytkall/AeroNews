@@ -69,8 +69,6 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 }
 
 
-
-
 function exibirTodasNoticias() {
     try {
         $conn = conectarBD();
@@ -140,7 +138,13 @@ function deletarNoticia($id_noticia) {
             $stmt = $conn->prepare("DELETE FROM tb_noticia WHERE id_noticia = :id_noticia");
             $stmt->bindParam(':id_noticia', $id_noticia, PDO::PARAM_INT);
             $stmt->execute();
-            $resultados = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+            // Verifica se a exclusão foi bem-sucedida
+            if ($stmt->rowCount() > 0) {
+                return "Notícia deletada com sucesso!";
+            } else {
+                return "Nenhuma notícia encontrada para deletar com o ID fornecido.";
+            }
         } else {
             return null;
         }
@@ -149,41 +153,40 @@ function deletarNoticia($id_noticia) {
     }
 }
 
-function updateNoticia() {
-    // Obtém os dados da notícia a ser atualizada
-    $id_noticia = $_POST['id_noticia'];
-    $titulo = $_POST['titulo'];
-    $subtitulo = $_POST['subtitulo'];
-    $imgUrl = $_POST['imagem'];
-    $noticia = $_POST['noticia'];
 
-    $conn = conectarBD();
+function updateNoticia($id_noticia, $titulo, $subtitulo, $imgUrl, $noticia) {
+    try {
+        $conn = conectarBD();
 
-    // Prepara a consulta de atualização
-    $sql = "UPDATE tb_noticia SET
-            nm_titulo = :titulo,
-            nm_subtitulo = :subtitulo,
-            img_noticia = :imgUrl,
-            tx_noticia = :noticia
-            WHERE id_noticia = :id_noticia";
-    $stmt = $conn->prepare($sql);
+        // Prepara a consulta de atualização
+        $sql = "UPDATE tb_noticia SET
+                nm_titulo = :titulo,
+                nm_subtitulo = :subtitulo,
+                img_noticia = :imgUrl,
+                tx_noticia = :noticia
+                WHERE id_noticia = :id_noticia";
+        $stmt = $conn->prepare($sql);
 
-    // Vincula os parâmetros da consulta
-    $stmt->bindParam(':titulo', $titulo);
-    $stmt->bindParam(':subtitulo', $subtitulo);
-    $stmt->bindParam(':imgUrl', $imgUrl);
-    $stmt->bindParam(':noticia', $noticia);
-    $stmt->bindParam(':id_noticia', $id_noticia, PDO::PARAM_INT);
+        // Vincula os parâmetros da consulta
+        $stmt->bindParam(':titulo', $titulo);
+        $stmt->bindParam(':subtitulo', $subtitulo);
+        $stmt->bindParam(':imgUrl', $imgUrl);
+        $stmt->bindParam(':noticia', $noticia);
+        $stmt->bindParam(':id_noticia', $id_noticia, PDO::PARAM_INT);
 
-    // Executa a consulta
-    $stmt->execute();
+        // Executa a consulta
+        $stmt->execute();
 
-    // Verifica se a consulta foi bem-sucedida
-    if ($stmt->rowCount() > 0) {
-        return "Notícia atualizada com sucesso!";
-    } else {
-        return "Erro ao atualizar notícia.";
+        // Verifica se a consulta foi bem-sucedida
+        if ($stmt->rowCount() > 0) {
+            return "Notícia atualizada com sucesso!";
+        } else {
+            return "Erro ao atualizar notícia.";
+        }
+    } catch (PDOException $e) {
+        return "Erro: " . $e->getMessage();
     }
 }
+
 
 ?>
