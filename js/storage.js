@@ -35,23 +35,17 @@ const firebaseConfig = {
             const titulo = document.getElementById('titulo').value;
             const subtitulo = document.getElementById('subtitulo').value;
             const noticia = document.getElementById('noticia').value;
-
-            // Obter categorias selecionadas
             const categoriasSelecionadas = Array.from(document.querySelectorAll('input[name="categorias[]"]:checked')).map(input => input.value);
-
-            // Envia os dados (incluindo a URL da imagem e as categorias) para o servidor PHP
             const formData = new FormData();
             formData.append('titulo', titulo);
             formData.append('subtitulo', subtitulo);
             formData.append('imagem', imgUrl);
             formData.append('noticia', noticia);
 
-            // Adiciona as categorias ao FormData
             categoriasSelecionadas.forEach(categoria => {
                 formData.append('categorias[]', categoria);
             });
 
-            // Debugging (opcional)
             console.log('Título:', titulo);
             console.log('Subtítulo:', subtitulo);
             console.log('Imagem URL:', imgUrl);
@@ -65,7 +59,6 @@ const firebaseConfig = {
         })
         .then((response) => {
             if (response.ok) {
-                // Limpar os campos após o envio bem-sucedido
                 document.getElementById('formNoticia').reset();
                 console.log('Campos limpos após o envio com sucesso.');
                 return response.text();
@@ -75,7 +68,6 @@ const firebaseConfig = {
         })
         .then((resultado) => {
             console.log(resultado);
-            // Adicione aqui qualquer lógica adicional após o sucesso
         })
         .catch((error) => {
             console.error("Erro:", error);

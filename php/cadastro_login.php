@@ -46,46 +46,46 @@ function cadastrarUsuario($nm_usuario, $usuario, $senha) {
     }
 }
 
+function verificarLogin($usuario, $senha) {
+    $conn = conectarBD();
+    if (!$conn) {
+        die("Falha na conexão com o banco de dados");
+    }
+
+    $query = "SELECT * FROM tb_usuario WHERE usr_email = :usuario";
+    $stmt = $conn->prepare($query);
+    $stmt->bindParam(':usuario', $usuario);
+    $stmt->execute();
+
+    $usuario_info = $stmt->fetch(PDO::FETCH_ASSOC);
+
+    if ($usuario_info && password_verify($senha, $usuario_info['usr_senha'])) {
+        return true;
+    } else {
+        return false;
+    }
+}
+
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $acao = $_POST["acao"];
 
     if ($acao == "cadastro") {
-        $nm_usuario = $_POST["nm_usuario"];
-        $usuario = $_POST["usr_email"];
-        $senha = $_POST["usr_senha"];
 
-        $resultado = cadastrarUsuario($nm_usuario, $usuario, $senha);
-        if ($resultado) {
-            echo "Usuário cadastrado com sucesso. Faça o login.";
-        } else {
-            echo "Erro ao cadastrar o usuário. Tente novamente.";
-        }
     } elseif ($acao == "login") {
         $usuario = $_POST["usr_email"];
         $senha = $_POST["usr_senha"];
 
-        function verificarLogin($usuario, $senha) {
+        if (verificarLogin($usuario, $senha)) {
             $conn = conectarBD();
-            if (!$conn) {
-                die("Falha na conexão com o banco de dados");
-            }
-            $query = "SELECT * FROM tb_usuario WHERE usr_email = :usuario";
+            $query = "SELECT id_usuario FROM tb_usuario WHERE usr_email = :usuario";
             $stmt = $conn->prepare($query);
             $stmt->bindParam(':usuario', $usuario);
             $stmt->execute();
-
             $usuario_info = $stmt->fetch(PDO::FETCH_ASSOC);
 
-            if ($usuario_info && password_verify($senha, $usuario_info['usr_senha'])) {
-                return true;
-            } else {
-                return false;
-            }
-        }
-
-        if (verificarLogin($usuario, $senha)) {
             session_start();
             $_SESSION["idUsuario"] = $usuario_info['id_usuario'];
+
             header("Location: ../php/home.php");
             exit();
         } else {
@@ -95,5 +95,4 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         echo "Ação inválida.";
     }
 }
-
 ?>

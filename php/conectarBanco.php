@@ -74,7 +74,7 @@ function exibirTodasNoticias() {
         $conn = conectarBD();
 
         if ($conn) {
-            $stmt = $conn->prepare("SELECT * FROM tb_noticia");
+            $stmt = $conn->prepare("SELECT * FROM tb_noticia ORDER BY id_noticia DESC");
             $stmt->execute();
             $resultados = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
@@ -86,6 +86,7 @@ function exibirTodasNoticias() {
         return "Erro ao buscar notícias: " . $e->getMessage();
     }
 }
+
 
 // Função para exibir notícias com base em uma categoria específica
 function exibirNoticiasPorCategoria($categoria_id) {
@@ -99,7 +100,7 @@ function exibirNoticiasPorCategoria($categoria_id) {
             SELECT tb_noticia.*
             FROM tb_noticia
             INNER JOIN tb_noticia_categoria ON tb_noticia.id_noticia = tb_noticia_categoria.id_noticia
-            WHERE tb_noticia_categoria.id_categoria = :categoria_id
+            WHERE tb_noticia_categoria.id_categoria = :categoria_id ORDER BY id_noticia DESC
         ");
 
         $stmt->bindParam(':categoria_id', $categoria_id);

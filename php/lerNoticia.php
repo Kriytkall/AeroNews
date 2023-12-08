@@ -9,7 +9,7 @@
     <title>Visualizar Notícia</title>
     <style>
         .editavel {
-            border: 1px solid transparent; /* Esconde a borda quando não está em modo de edição */
+            border: 1px solid transparent;
             padding: 5px;
             margin: 5px 0;
         }
@@ -19,7 +19,7 @@
             var camposEditaveis = document.querySelectorAll('.editavel');
             camposEditaveis.forEach(function (campo) {
                 campo.contentEditable = true;
-                campo.style.border = '1px solid #000'; // Adapte conforme necessário
+                campo.style.border = '1px solid #000';
             });
         }
     </script>
@@ -69,7 +69,6 @@
             }
         ?>
 
-        <!-- Adicione um campo oculto para armazenar o valor atual da imagem -->
         <input type="hidden" id="imagemAtual" value="<?php echo $imagem; ?>">
 
         <div class="botoes">
@@ -82,17 +81,11 @@
 
         <script>
             function atualizarNoticia() {
-                // Coletar os dados editados
                 var id_noticia = <?php echo json_encode($id_noticia); ?>;
                 var titulo = document.getElementById('titulo').innerText;
                 var subtitulo = document.getElementById('subtitulo').innerText;
                 var texto = document.getElementById('texto').innerText;
-                
-                // Obter a imagem atual do campo oculto
                 var imagemAtual = document.getElementById('imagemAtual').value;
-
-                // Aqui você deve enviar os dados para o servidor (via Ajax ou formulário)
-                // Pode chamar uma função como enviarDadosAoServidor(titulo, subtitulo, texto);
 
                 enviarDadosAoServidor(id_noticia, titulo, subtitulo, texto, imagemAtual);
 
@@ -103,30 +96,25 @@
                 var camposEditaveis = document.querySelectorAll('.editavel');
                 camposEditaveis.forEach(function (campo) {
                     campo.contentEditable = false;
-                    campo.style.border = 'none'; // Remover a borda
+                    campo.style.border = 'none';
                 });
             }
 
-            // Adicione esta função para enviar dados ao servidor
             function enviarDadosAoServidor(id_noticia, titulo, subtitulo, texto, imagemAtual) {
                 var xhr = new XMLHttpRequest();
                 xhr.open("POST", "atualizarNoticia.php", true);
                 xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
                 xhr.onreadystatechange = function () {
                     if (xhr.readyState == 4 && xhr.status == 200) {
-                        // Exibir a resposta do servidor (pode ser um alert, console.log, etc.)
                         console.log(xhr.responseText);
                     }
                 };
 
-                // Construir os dados a serem enviados
                 var params = "id_noticia=" + id_noticia +
                             "&titulo=" + encodeURIComponent(titulo) +
                             "&subtitulo=" + encodeURIComponent(subtitulo) +
                             "&texto=" + encodeURIComponent(texto) +
-                            "&imgUrl=" + encodeURIComponent(imagemAtual); // Use imagemAtual aqui
-
-                // Enviar os dados
+                            "&imgUrl=" + encodeURIComponent(imagemAtual);
                 xhr.send(params);
             }
 
@@ -140,17 +128,11 @@
                     xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
                     xhr.onreadystatechange = function () {
                         if (xhr.readyState == 4 && xhr.status == 200) {
-                            // Exibir a resposta do servidor (pode ser um alert, console.log, etc.)
                             console.log(xhr.responseText);
-                            // Redirecionar para a página desejada após a exclusão (por exemplo, a página inicial)
                             window.location.href = "home.php";
                         }
                     };
-
-                    // Construir os dados a serem enviados
                     var params = "id_noticia=" + id_noticia;
-
-                    // Enviar os dados
                     xhr.send(params);
                 }
             }
