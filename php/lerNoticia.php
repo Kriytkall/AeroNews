@@ -1,4 +1,3 @@
-<!-- lerNoticia.php -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -14,10 +13,6 @@
             padding: 5px;
             margin: 5px 0;
         }
-
-        .editavel:hover {
-            background-color: #f5f5f5; /* Adapte conforme necessário */
-        }
     </style>
     <script>
         function habilitarEdicao() {
@@ -27,17 +22,8 @@
                 campo.style.border = '1px solid #000'; // Adapte conforme necessário
             });
         }
-
-        function atualizarNoticia() {
-            // Coletar os dados editados
-            var titulo = document.getElementById('titulo').innerText;
-            var subtitulo = document.getElementById('subtitulo').innerText;
-            var texto = document.getElementById('texto').innerText;
-
-            // Aqui você deve enviar os dados para o servidor (via Ajax ou formulário)
-            // Pode chamar uma função como enviarDadosAoServidor(titulo, subtitulo, texto);
-        }
     </script>
+    
 </head>
 <body>
     <nav>
@@ -86,49 +72,89 @@
         <!-- Adicione um campo oculto para armazenar o valor atual da imagem -->
         <input type="hidden" id="imagemAtual" value="<?php echo $imagem; ?>">
 
-        <button onclick="habilitarEdicao()">Editar</button>
-        <button onclick="atualizarNoticia()">Salvar</button>
+        <div class="botoes">
+            <button class="botao" onclick="habilitarEdicao()">Editar</button>
+            <button id="botaoSalvar" class="botao" onclick="atualizarNoticia()">Salvar</button>
+            <button class="botao" onclick="excluirNoticia()">Excluir</button>
+        </div>
     </section>
+
+
         <script>
-        function atualizarNoticia() {
-            // Coletar os dados editados
-            var id_noticia = <?php echo json_encode($id_noticia); ?>;
-            var titulo = document.getElementById('titulo').innerText;
-            var subtitulo = document.getElementById('subtitulo').innerText;
-            var texto = document.getElementById('texto').innerText;
-            
-            // Obter a imagem atual do campo oculto
-            var imagemAtual = document.getElementById('imagemAtual').value;
+            function atualizarNoticia() {
+                // Coletar os dados editados
+                var id_noticia = <?php echo json_encode($id_noticia); ?>;
+                var titulo = document.getElementById('titulo').innerText;
+                var subtitulo = document.getElementById('subtitulo').innerText;
+                var texto = document.getElementById('texto').innerText;
+                
+                // Obter a imagem atual do campo oculto
+                var imagemAtual = document.getElementById('imagemAtual').value;
 
-            // Aqui você deve enviar os dados para o servidor (via Ajax ou formulário)
-            // Pode chamar uma função como enviarDadosAoServidor(titulo, subtitulo, texto);
+                // Aqui você deve enviar os dados para o servidor (via Ajax ou formulário)
+                // Pode chamar uma função como enviarDadosAoServidor(titulo, subtitulo, texto);
 
-            enviarDadosAoServidor(id_noticia, titulo, subtitulo, texto, imagemAtual);
-        }
+                enviarDadosAoServidor(id_noticia, titulo, subtitulo, texto, imagemAtual);
 
-        // Adicione esta função para enviar dados ao servidor
-        function enviarDadosAoServidor(id_noticia, titulo, subtitulo, texto, imagemAtual) {
-            var xhr = new XMLHttpRequest();
-            xhr.open("POST", "atualizarNoticia.php", true);
-            xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-            xhr.onreadystatechange = function () {
-                if (xhr.readyState == 4 && xhr.status == 200) {
-                    // Exibir a resposta do servidor (pode ser um alert, console.log, etc.)
-                    console.log(xhr.responseText);
+                desativarEdicao();
+            }
+
+            function desativarEdicao() {
+                var camposEditaveis = document.querySelectorAll('.editavel');
+                camposEditaveis.forEach(function (campo) {
+                    campo.contentEditable = false;
+                    campo.style.border = 'none'; // Remover a borda
+                });
+            }
+
+            // Adicione esta função para enviar dados ao servidor
+            function enviarDadosAoServidor(id_noticia, titulo, subtitulo, texto, imagemAtual) {
+                var xhr = new XMLHttpRequest();
+                xhr.open("POST", "atualizarNoticia.php", true);
+                xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+                xhr.onreadystatechange = function () {
+                    if (xhr.readyState == 4 && xhr.status == 200) {
+                        // Exibir a resposta do servidor (pode ser um alert, console.log, etc.)
+                        console.log(xhr.responseText);
+                    }
+                };
+
+                // Construir os dados a serem enviados
+                var params = "id_noticia=" + id_noticia +
+                            "&titulo=" + encodeURIComponent(titulo) +
+                            "&subtitulo=" + encodeURIComponent(subtitulo) +
+                            "&texto=" + encodeURIComponent(texto) +
+                            "&imgUrl=" + encodeURIComponent(imagemAtual); // Use imagemAtual aqui
+
+                // Enviar os dados
+                xhr.send(params);
+            }
+
+            function excluirNoticia() {
+                var confirmaExclusao = confirm("Tem certeza que deseja excluir esta notícia?");
+                
+                if (confirmaExclusao) {
+                    var id_noticia = <?php echo json_encode($id_noticia); ?>;
+                    var xhr = new XMLHttpRequest();
+                    xhr.open("POST", "excluirNoticia.php", true);
+                    xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+                    xhr.onreadystatechange = function () {
+                        if (xhr.readyState == 4 && xhr.status == 200) {
+                            // Exibir a resposta do servidor (pode ser um alert, console.log, etc.)
+                            console.log(xhr.responseText);
+                            // Redirecionar para a página desejada após a exclusão (por exemplo, a página inicial)
+                            window.location.href = "home.php";
+                        }
+                    };
+
+                    // Construir os dados a serem enviados
+                    var params = "id_noticia=" + id_noticia;
+
+                    // Enviar os dados
+                    xhr.send(params);
                 }
-            };
-
-            // Construir os dados a serem enviados
-            var params = "id_noticia=" + id_noticia +
-                        "&titulo=" + encodeURIComponent(titulo) +
-                        "&subtitulo=" + encodeURIComponent(subtitulo) +
-                        "&texto=" + encodeURIComponent(texto) +
-                        "&imgUrl=" + encodeURIComponent(imagemAtual); // Use imagemAtual aqui
-
-            // Enviar os dados
-            xhr.send(params);
-        }
-    </script>
+            }
+        </script>
 
 
 </body>

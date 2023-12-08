@@ -65,6 +65,9 @@ const firebaseConfig = {
         })
         .then((response) => {
             if (response.ok) {
+                // Limpar os campos após o envio bem-sucedido
+                document.getElementById('formNoticia').reset();
+                console.log('Campos limpos após o envio com sucesso.');
                 return response.text();
             } else {
                 throw new Error('Erro ao salvar notícia.');
@@ -78,3 +81,4 @@ const firebaseConfig = {
             console.error("Erro:", error);
         });
 }
+

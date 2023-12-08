@@ -1,16 +1,20 @@
+document.addEventListener('DOMContentLoaded', function () {
+    const formNoticia = document.getElementById('formNoticia');
 
-function enviarFormulario(event) {
-    event.preventDefault(); // Impede o envio padrão do formulário
+    if (formNoticia) {
+        formNoticia.addEventListener('submit', function (event) {
+            // Prevenir o envio padrão do formulário
+            event.preventDefault();
 
-    // Desativa o botão de envio para evitar múltiplos envios
-    document.querySelector('.botao-enviar').disabled = true;
-
-    // Obtenha os dados do formulário (você pode enviar esses dados para o servidor usando AJAX ou outra abordagem)
-    const formData = new FormData(document.getElementById('formNoticia'));
-
-    // Aqui você pode adicionar lógica para enviar os dados para o servidor, por exemplo, usando AJAX
-    // ...
-
-    // Limpe os campos do formulário após o envio bem-sucedido
-    document.getElementById('formNoticia').reset();
-}
+            // Enviar o formulário
+            enviarFormulario()
+                .then(() => {
+                    // Limpar os campos do formulário após o envio bem-sucedido
+                    formNoticia.reset();
+                })
+                .catch(error => {
+                    console.error("Erro ao enviar o formulário:", error);
+                });
+        });
+    }
+});

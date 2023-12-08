@@ -135,6 +135,12 @@ function deletarNoticia($id_noticia) {
     try {
         $conn = conectarBD();
         if ($conn) {
+            // Excluir manualmente as referências na tabela tb_noticia_categoria
+            $stmtDeleteCategoria = $conn->prepare("DELETE FROM tb_noticia_categoria WHERE id_noticia = :id_noticia");
+            $stmtDeleteCategoria->bindParam(':id_noticia', $id_noticia, PDO::PARAM_INT);
+            $stmtDeleteCategoria->execute();
+
+            // Continuar com a exclusão da notícia após excluir as referências
             $stmt = $conn->prepare("DELETE FROM tb_noticia WHERE id_noticia = :id_noticia");
             $stmt->bindParam(':id_noticia', $id_noticia, PDO::PARAM_INT);
             $stmt->execute();
@@ -146,12 +152,13 @@ function deletarNoticia($id_noticia) {
                 return "Nenhuma notícia encontrada para deletar com o ID fornecido.";
             }
         } else {
-            return null;
+            return "Erro na conexão com o banco de dados.";
         }
     } catch (PDOException $e) {
         return "Erro ao deletar: " . $e->getMessage();
     }
 }
+
 
 
 function updateNoticia($id_noticia, $titulo, $subtitulo, $imgUrl, $noticia) {
